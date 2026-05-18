@@ -108,6 +108,7 @@ export default function Reels() {
   const [commentDrafts, setCommentDrafts] = useState({});
   const [activeReelId, setActiveReelId] = useState(null);
   const videoRefs = useRef(new Map());
+  const commentInputRefs = useRef(new Map());
   const { data: localReels = [], isLoading: isLocalLoading } = useGetReelsQuery();
   const {
     data: liveData,
@@ -214,6 +215,16 @@ export default function Reels() {
       pauseAllReels();
     };
   }, [pauseAllReels]);
+
+  useEffect(() => {
+    if (!activeCommentReelId) return undefined;
+
+    const frameId = window.requestAnimationFrame(() => {
+      commentInputRefs.current.get(activeCommentReelId)?.focus();
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [activeCommentReelId]);
 
   function updateInteraction(reelId, updater) {
     setInteractions((current) => {
@@ -442,6 +453,13 @@ export default function Reels() {
                           </div>
                           <form onSubmit={(event) => submitComment(event, reel.id)} className="mt-3 flex gap-2">
                             <input
+                              ref={(node) => {
+                                if (node) {
+                                  commentInputRefs.current.set(reel.id, node);
+                                } else {
+                                  commentInputRefs.current.delete(reel.id);
+                                }
+                              }}
                               value={commentDrafts[reel.id] || ''}
                               onChange={(event) => updateCommentDraft(reel.id, event.target.value)}
                               placeholder="Add a comment"
