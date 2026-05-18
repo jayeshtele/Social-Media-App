@@ -276,6 +276,15 @@ export default function Reels() {
     updateCommentDraft(reelId, '');
   }
 
+  function openCommentInput(reelId) {
+    if (activeCommentReelId === reelId) {
+      commentInputRefs.current.get(reelId)?.focus();
+      return;
+    }
+
+    setActiveCommentReelId(reelId);
+  }
+
   return (
     <div className="mx-auto w-full max-w-7xl px-3 py-4 sm:px-4 lg:py-6">
       <div className="mb-5 flex flex-col gap-2">
@@ -403,9 +412,7 @@ export default function Reels() {
                         <button
                           type="button"
                           title="Comment"
-                          onClick={() =>
-                            setActiveCommentReelId((current) => (current === reel.id ? null : reel.id))
-                          }
+                          onClick={() => openCommentInput(reel.id)}
                           className={`focus-ring flex min-h-10 flex-col items-center justify-center gap-0.5 rounded-lg text-[10px] font-bold transition hover:bg-white/10 hover:text-white sm:min-h-12 sm:gap-1 sm:text-[11px] ${
                             isCommentsOpen ? 'text-pulse-cyan' : 'text-zinc-300'
                           }`}

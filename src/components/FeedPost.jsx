@@ -6,7 +6,7 @@ import {
   Send,
   Smile,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   useAddCommentMutation,
@@ -18,6 +18,7 @@ import Avatar from './Avatar.jsx';
 
 export default function FeedPost({ post }) {
   const [comment, setComment] = useState('');
+  const commentInputRef = useRef(null);
   const [toggleLike] = useToggleLikeMutation();
   const [toggleSave] = useToggleSaveMutation();
   const [addComment, { isLoading: isCommenting }] = useAddCommentMutation();
@@ -27,6 +28,17 @@ export default function FeedPost({ post }) {
     if (!comment.trim()) return;
     await addComment({ postId: post.id, text: comment }).unwrap();
     setComment('');
+  }
+
+  function focusCommentInput() {
+    document.getElementById(`comments-${post.id}`)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+
+    window.requestAnimationFrame(() => {
+      commentInputRef.current?.focus();
+    });
   }
 
   return (
@@ -81,13 +93,14 @@ export default function FeedPost({ post }) {
           >
             <Heart className={post.likedByViewer ? 'h-5 w-5 fill-current' : 'h-5 w-5'} />
           </button>
-          <a
-            href={`#comments-${post.id}`}
+          <button
+            type="button"
             title="Comments"
+            onClick={focusCommentInput}
             className="focus-ring grid h-9 w-9 place-items-center rounded-lg text-zinc-200 transition hover:bg-white/10"
           >
             <MessageCircle className="h-5 w-5" />
-          </a>
+          </button>
           <button
             type="button"
             title="Share"
@@ -148,6 +161,7 @@ export default function FeedPost({ post }) {
         <form onSubmit={submitComment} className="mt-4 flex items-center gap-2 border-t border-white/10 pt-3">
           <Smile className="h-5 w-5 text-zinc-500" />
           <input
+            ref={commentInputRef}
             value={comment}
             onChange={(event) => setComment(event.target.value)}
             placeholder="Add a comment..."
