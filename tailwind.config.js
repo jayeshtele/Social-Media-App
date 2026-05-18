@@ -5,21 +5,21 @@ export default {
     extend: {
       colors: {
         ink: {
-          950: '#1a0d09',
-          900: '#23110b',
-          850: '#31180f',
-          800: '#472316',
-          700: '#66331f',
+          950: '#06070a',
+          900: '#0b0d12',
+          850: '#11141b',
+          800: '#171b23',
+          700: '#222836',
         },
         pulse: {
-          cyan: '#f97316',
-          rose: '#ef4444',
-          amber: '#f59e0b',
-          lime: '#fb923c',
+          cyan: '#33e0d3',
+          rose: '#ff4f86',
+          amber: '#ffb84d',
+          lime: '#a8ff60',
         },
       },
       boxShadow: {
-        soft: '0 18px 50px rgba(44, 18, 8, 0.36)',
+        soft: '0 18px 50px rgba(0, 0, 0, 0.28)',
       },
     },
   },
